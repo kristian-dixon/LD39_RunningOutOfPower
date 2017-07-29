@@ -30,4 +30,12 @@ public class Bullet : MonoBehaviour
 
 	}
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag("Enemy"))
+        {
+            other.GetComponent<Enemy>().BulletHit();
+            //TODO: Consider boom effect
+        }
+    }
 }

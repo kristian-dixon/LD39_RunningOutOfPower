@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     {
         HandleLook();
         HandleWalking();
+
+        MoveController();
     }
 
     private void HandleWalking()
@@ -73,5 +75,11 @@ public class PlayerController : MonoBehaviour
         {
             mCamera.rotation = Quaternion.Euler(RequestedVertAngle, mCamera.rotation.eulerAngles.y, mCamera.rotation.eulerAngles.z);
         }
+    }
+
+    private void MoveController()
+    {
+        //TODO: Hide/ show controller
+        //TODO: Controller sway when moving.
     }
 }

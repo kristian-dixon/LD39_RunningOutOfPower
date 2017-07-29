@@ -68,9 +68,14 @@ public class SubManager : MonoBehaviour
     {
         mPlayerLives--;
 
-        //TODO: GAMEOVER
+        //TODO: if GAMEOVER
 
         DestroyEverything();
+    }
+
+    public void UpdateScore(int pScore)
+    {
+        mGameScore += pScore;
     }
 
     void DestroyEverything()
