@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float mTimeToLive = 10;
+    public float mTimeToLive = 5;
     //TODO: Possibly limit bounces
 
     public float mSpeed = 4.1f;
@@ -15,10 +15,12 @@ public class Bullet : MonoBehaviour
 	void Start ()
     {
         mRB = GetComponent<Rigidbody2D>();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+        mRB.velocity = transform.up * mSpeed;
+
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
         mTimeToLive -= Time.deltaTime;
         if(mTimeToLive <= 0)
@@ -26,6 +28,6 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
-        mRB.velocity = transform.up * mSpeed;
 	}
+
 }
