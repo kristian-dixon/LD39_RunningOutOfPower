@@ -57,7 +57,7 @@ public class SubPlayerController : MonoBehaviour
     {
         if(col.collider.CompareTag("Enemy"))
         {
-            Debug.Log("Dead mate");
+            //TODO: Handle death.
         }
     }
 }

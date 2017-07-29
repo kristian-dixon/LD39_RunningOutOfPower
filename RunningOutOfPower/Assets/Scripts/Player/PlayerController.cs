@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public Transform mCameraGimbal;
-    public Transform mCamera;
+    public Transform mCameraTransform;
+    public Transform mArms;
+    public Camera mCamera;
     public float mHorizontalCameraSensitivity = 100f;
     public float mVerticalCameraSensitivity = 100f;
 
@@ -14,10 +16,19 @@ public class PlayerController : MonoBehaviour
     public float mMoveSpeed = 4;
     private Rigidbody mRB;
 
+    private bool ShowScreen = true;
+
     // Use this for initialization
 	void Start ()
     {
         mRB = GetComponent<Rigidbody>();
+        if(!mCamera)
+        {
+            if(mCameraTransform)
+            {
+                mCamera = mCamera.GetComponent<Camera>();
+            }
+        }
 	}
 	
 	// Update is called once per frame
@@ -67,13 +78,12 @@ public class PlayerController : MonoBehaviour
         mCameraGimbal.Rotate(0, horizontalRotation, 0);
 
         //Clamp angle to prevent view being confusing
-        float RequestedVertAngle = (mCamera.rotation.eulerAngles + new Vector3(verticalRotation, 0, 0)).x;
-        Debug.Log(RequestedVertAngle);
+        float RequestedVertAngle = (mCameraTransform.rotation.eulerAngles + new Vector3(verticalRotation, 0, 0)).x;
 
         //Prevents the andle going above 90 or below 270 as Unity's rotate is weird.
         if(RequestedVertAngle < 90 || RequestedVertAngle > 270)
         {
-            mCamera.rotation = Quaternion.Euler(RequestedVertAngle, mCamera.rotation.eulerAngles.y, mCamera.rotation.eulerAngles.z);
+            mCameraTransform.rotation = Quaternion.Euler(RequestedVertAngle, mCameraTransform.rotation.eulerAngles.y, mCameraTransform.rotation.eulerAngles.z);
         }
     }
 
@@ -81,5 +91,28 @@ public class PlayerController : MonoBehaviour
     {
         //TODO: Hide/ show controller
         //TODO: Controller sway when moving.
+        if(Input.GetKeyUp(KeyCode.F))
+        {
+            if(ShowScreen)
+            {
+                Debug.Log("Hello");
+                //Screen is in view, user wants it gone
+
+                //TODO: FANCY TRANSITION
+                mCamera.fieldOfView = 90;
+                mArms.Rotate(50, 0, 0);
+            }
+            else
+            {
+                mCamera.fieldOfView = 60;
+                mArms.Rotate(-50, 0, 0);
+            }
+
+            ShowScreen = !ShowScreen; 
+        }
+        
+
+        //META: BOTTOM X ROTATION = 50.
+        //META: Screen FOV Should be reduced to 60, returned to 90 after.
     }
 }

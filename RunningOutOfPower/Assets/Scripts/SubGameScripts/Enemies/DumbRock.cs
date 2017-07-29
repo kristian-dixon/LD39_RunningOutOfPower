@@ -15,7 +15,6 @@ public class DumbRock : Enemy
         Vector2 initalDirection = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
         mRB.velocity = initalDirection * Random.Range(mMinSpawnSpeed, mMaxSpawnSpeed);
 
-        Debug.Log(initalDirection);
     }
 	
     /*
