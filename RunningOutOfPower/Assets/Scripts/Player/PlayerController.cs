@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public float mMoveSpeed = 4;
     private Rigidbody mRB;
 
-    private bool mShowScreen = true;
+    private bool mShowScreen = false;
     private bool mCrouched = false;
     // Use this for initialization
 	void Start ()
