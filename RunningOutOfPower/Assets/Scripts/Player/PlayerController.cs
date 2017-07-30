@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public Transform mCameraTransform;
     public Transform mArms;
     public Camera mCamera;
+    public CapsuleCollider mCollider;
     public float mHorizontalCameraSensitivity = 100f;
     public float mVerticalCameraSensitivity = 100f;
 
@@ -16,8 +17,8 @@ public class PlayerController : MonoBehaviour
     public float mMoveSpeed = 4;
     private Rigidbody mRB;
 
-    private bool ShowScreen = true;
-
+    private bool mShowScreen = true;
+    private bool mCrouched = false;
     // Use this for initialization
 	void Start ()
     {
@@ -29,15 +30,26 @@ public class PlayerController : MonoBehaviour
                 mCamera = mCamera.GetComponent<Camera>();
             }
         }
+
+        mCollider = GetComponent<CapsuleCollider>();
 	}
 	
+
+    void Update()
+    {
+        //Accurate input tracking needed for toggle events.
+        MoveController();
+
+        Crouch();
+    }
+
 	// Update is called once per frame
 	void FixedUpdate ()
     {
         HandleLook();
         HandleWalking();
 
-        MoveController();
+        //Crouch();
     }
 
     private void HandleWalking()
@@ -93,7 +105,7 @@ public class PlayerController : MonoBehaviour
         //TODO: Controller sway when moving.
         if(Input.GetKeyUp(KeyCode.F))
         {
-            if(ShowScreen)
+            if(mShowScreen)
             {
                 Debug.Log("Hello");
                 //Screen is in view, user wants it gone
@@ -108,11 +120,32 @@ public class PlayerController : MonoBehaviour
                 mArms.Rotate(-50, 0, 0);
             }
 
-            ShowScreen = !ShowScreen; 
+            mShowScreen = !mShowScreen; 
         }
         
 
         //META: BOTTOM X ROTATION = 50.
         //META: Screen FOV Should be reduced to 60, returned to 90 after.
+    }
+
+    private void Crouch()
+    {
+        if (mCrouched)
+        {
+            //Uncrouch
+            mCollider.height = 1f;
+        }
+        else
+        {
+            //Crouch
+            mCollider.height = 2f;
+
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            mCrouched = !mCrouched;
+            Debug.Log(mCrouched);
+        }
     }
 }
