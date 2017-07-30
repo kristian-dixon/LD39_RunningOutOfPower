@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
         HandleLook();
         HandleWalking();
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Set walk speed to requested movement speed.
-        Walk *= Time.deltaTime * mMoveSpeed;
+        Walk *= Time.fixedDeltaTime * mMoveSpeed;
 
         //Apply
         mRB.MovePosition(mRB.position + Walk);
@@ -73,8 +73,8 @@ public class PlayerController : MonoBehaviour
         }
 
         //Applying to seperate things prevents camera roll.
-        float horizontalRotation = Input.GetAxis("Mouse X") * mHorizontalCameraSensitivity * Time.deltaTime;
-        float verticalRotation = Input.GetAxis("Mouse Y") * mVerticalCameraSensitivity * Time.deltaTime * invert;
+        float horizontalRotation = Input.GetAxis("Mouse X") * mHorizontalCameraSensitivity * Time.fixedDeltaTime;
+        float verticalRotation = Input.GetAxis("Mouse Y") * mVerticalCameraSensitivity * Time.fixedDeltaTime * invert;
         mCameraGimbal.Rotate(0, horizontalRotation, 0);
 
         //Clamp angle to prevent view being confusing
