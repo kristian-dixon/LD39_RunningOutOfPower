@@ -24,7 +24,11 @@ public class NannyController : MonoBehaviour
     private List<MapNode> mNodes;
     private int currentTarget;
 
+    private NannyLook mNanLook;
+    public SubManager mSubGame;
     float height;
+    float mTimeLastSeenPlayer;
+    bool mChasingPlayer = false;
 
 	// Use this for initialization
 	void Start ()
@@ -40,7 +44,7 @@ public class NannyController : MonoBehaviour
                 mNodes.Add(new MapNode(mRoomContainer.GetChild(i).position));
             }
         }
-
+        mNanLook = GetComponent<NannyLook>();
         mAgent.SetDestination(ChooseNewTarget());
 	}
 	
@@ -51,8 +55,23 @@ public class NannyController : MonoBehaviour
 
         if (mAgent.remainingDistance == 0 )
         {
-            mNodes[currentTarget].mTimeLastVisted = Time.time;
-            mAgent.SetDestination(ChooseNewTarget());
+            if(mChasingPlayer)
+            {
+                //Game Over!
+                mSubGame.GameOver();
+                
+            }
+            else
+            {
+                mNodes[currentTarget].mTimeLastVisted = Time.time;
+                mAgent.SetDestination(ChooseNewTarget());
+            }
+            
+        }
+
+        if(mChasingPlayer && Time.time - mTimeLastSeenPlayer > 5)
+        {
+            PlayerLost();
         }
 
     }
@@ -101,5 +120,19 @@ public class NannyController : MonoBehaviour
         currentTarget = bestChoice;
         height = mNodes[bestChoice].mPostion.y;
         return mNodes[bestChoice].mPostion;
+    }
+
+    public void PlayerFound(Vector3 PlayerPosition)
+    {
+        mAgent.speed += 0.2f;
+        mAgent.SetDestination(PlayerPosition);
+        mTimeLastSeenPlayer = Time.time; 
+        mChasingPlayer = true;
+    }
+
+    public void PlayerLost()
+    {
+        mChasingPlayer = false;
+        mAgent.speed -= 0.2f;
     }
 }

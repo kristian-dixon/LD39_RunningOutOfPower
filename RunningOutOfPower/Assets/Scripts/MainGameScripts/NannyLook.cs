@@ -8,7 +8,7 @@ public class NannyLook : MonoBehaviour
     public Transform mEyes;
     public float mSightRange = 5;
     public float mSightAngle = 0.7f;
-
+    NannyController mController;
 	// Use this for initialization
 	void Start ()
     {
@@ -16,6 +16,7 @@ public class NannyLook : MonoBehaviour
         {
             mEyes = transform;
         }
+        mController = GetComponent<NannyController>();
 	}
 	
 	// Update is called once per frame
@@ -31,11 +32,8 @@ public class NannyLook : MonoBehaviour
                 Physics.Raycast(ray, out rayResult, mSightRange);
                 if(rayResult.transform.CompareTag("Player"))
                 {
-                    Debug.Log("I CAN SEE YOU");
-                    Debug.DrawLine(mEyes.position, mPlayer.position, Color.red, 5f);
-
+                    mController.PlayerFound(mPlayer.position);
                 }
-
             }
         }
 	}

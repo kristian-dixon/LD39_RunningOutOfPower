@@ -1,18 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum BatteryState
-{
-    OK,
-    Warning,
-    Critical,
-    Dead
-}
-
+using UnityEngine.SceneManagement;
 
 public class SubManager : MonoBehaviour
 {
+    public static int HighScore = 43824592;
     public List<GameObject> mEnemyPrefabs;
     public Transform mEnemyStore;
     public Transform mBulletStore;
@@ -22,12 +15,8 @@ public class SubManager : MonoBehaviour
     public float mMaxEnemyWait = 5;
 
     public int mPlayerLives = 5;
-    public int mGameScore;
+    public static int mGameScore;
 
-    public float mStartPercentage = 50;
-    public float mBaseDrainPercentPerSecond = 1 / 3; //5 minutes for now
-    float mDrainPercent;
-    public BatteryState mBatteryState;
 
     public Transform mPlayerShip;
 
@@ -52,8 +41,10 @@ public class SubManager : MonoBehaviour
             //Randomize spawn quad
             Vector2 enemyPosition = new Vector2(Random.Range(3, 10) * PlayerQuad.x * -1, Random.Range(2, 5) * PlayerQuad.x * -1);    
 
-            Instantiate(mEnemyPrefabs[enemySpawnIndex], enemyPosition, Quaternion.Euler(Vector3.zero),mEnemyStore);
+            GameObject enemy = Instantiate(mEnemyPrefabs[enemySpawnIndex], enemyPosition, Quaternion.Euler(Vector3.zero),mEnemyStore);
             //TODO: Something more elegant
+            enemy.GetComponent<Enemy>().mManager = this;
+
 
             mTimeUntilEnemySpawn = Random.Range(mMinEnemyWait, mMaxEnemyWait);
         }
@@ -68,7 +59,12 @@ public class SubManager : MonoBehaviour
     {
         mPlayerLives--;
 
-        //TODO: if GAMEOVER
+        if(mPlayerLives <= 0)
+        {
+            GameOver();
+        }
+
+        
 
         DestroyEverything();
     }
@@ -82,12 +78,17 @@ public class SubManager : MonoBehaviour
     {
         for(int i = 0; i < mBulletStore.childCount; i++)
         {
-            Destroy(mBulletStore.GetChild(i));
+            Destroy(mBulletStore.GetChild(i).gameObject);
         }
 
         for(int i = 0; i < mEnemyStore.childCount; i++)
         {
-            Destroy(mEnemyStore.GetChild(i));
+            Destroy(mEnemyStore.GetChild(i).gameObject);
         }
+    }
+
+    public void GameOver()
+    {
+        SceneManager.LoadScene("GameOver");
     }
 }

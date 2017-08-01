@@ -13,6 +13,7 @@ public class SubPlayerController : MonoBehaviour
     public float mTimeBetweenShots = 0.25f;
     float mCannonCooldown = 0;
 
+    public SubManager mManager;
     Rigidbody2D mRB;
     // Use this for initialization
     void Start()
@@ -21,6 +22,8 @@ public class SubPlayerController : MonoBehaviour
         //mBulletContainer.parent = this.transform;
 
         mRB = GetComponent<Rigidbody2D>();
+
+        mManager.mBulletStore = mBulletContainer;
     }
 
     // Update is called once per frame
@@ -57,7 +60,9 @@ public class SubPlayerController : MonoBehaviour
     {
         if(col.collider.CompareTag("Enemy"))
         {
-            //TODO: Handle death.
+            mManager.PlayerDead();
+            transform.localPosition = Vector3.zero;
         }
     }
+
 }
